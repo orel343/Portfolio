@@ -1,3 +1,4 @@
+import { Metadata } from 'next';
 import { getProject } from '@/app/lib/projects';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
@@ -9,11 +10,25 @@ import { LikeButton } from '@/app/components/like-button';
 import { ViewCounter } from '@/app/components/view-counter';
 import { format } from 'date-fns';
 
-interface ProjectPageProps {
+type Props = {
   params: { id: string }
+  searchParams: { [key: string]: string | string[] | undefined }
 }
 
-export default async function ProjectPage({ params }: ProjectPageProps) {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const project = await getProject(params.id);
+  if (!project) {
+    return {
+      title: 'Project Not Found',
+    };
+  }
+  return {
+    title: project.title,
+    description: project.description,
+  };
+}
+
+export default async function ProjectPage({ params }: Props) {
   const project = await getProject(params.id);
 
   if (!project) {
