@@ -9,7 +9,11 @@ import { LikeButton } from '@/app/components/like-button';
 import { ViewCounter } from '@/app/components/view-counter';
 import { format } from 'date-fns';
 
-export default async function ProjectPage({ params }: { params: { id: string } }) {
+interface ProjectPageProps {
+  params: { id: string }
+}
+
+export default async function ProjectPage({ params }: ProjectPageProps) {
   const project = await getProject(params.id);
 
   if (!project) {
